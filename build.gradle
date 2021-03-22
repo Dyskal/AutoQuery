@@ -1,0 +1,31 @@
+plugins {
+    id 'java'                                                           //https://gradle.org/install
+    id "com.github.johnrengelman.shadow" version "6.1.0"                //https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
+    id "edu.sc.seis.launch4j" version "2.4.9"                           //https://plugins.gradle.org/plugin/edu.sc.seis.launch4j
+}
+
+group 'dyskal.autoquery'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.oracle.database.jdbc:ojdbc8-production:21.1.0.0' //https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc8-production
+    implementation 'com.electronwill.night-config:toml:3.6.3'            //https://search.maven.org/artifact/com.electronwill.night-config/toml
+    implementation 'net.harawata:appdirs:1.2.1'                          //https://search.maven.org/artifact/net.harawata/appdirs
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'dyskal.AutoQuery'
+    }
+}
+
+createExe {
+    outfile = "AutoQuery-${project.version}.exe"
+    mainClassName = 'dyskal.AutoQuery'
+    copyConfigurable = project.tasks.shadowJar.outputs.files
+    jar = "lib/${project.tasks.shadowJar.archiveFileName.get()}"
+}
